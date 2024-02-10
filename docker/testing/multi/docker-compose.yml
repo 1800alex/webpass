@@ -1,0 +1,32 @@
+version: '3'
+services:
+  softserve:
+    image: charmcli/soft-serve@sha256:1e89075219cb95f62e912fb1831b170bcec73a30e2bb6431533e12dfca2666b0
+    volumes:
+      - ./keys:/keys:ro
+      - ./soft-serve/config.yaml:/var/lib/soft-serve/config.yaml
+      # - /path/to/data:/soft-serve
+    restart: unless-stopped
+    env_file:
+      - config.env
+  testclient:
+    build:
+      context: ../testclient
+    restart: unless-stopped
+    volumes:
+      - ./keys:/keys:ro
+      - ../../../:/home/test/webpass
+    env_file:
+      - config.env
+    depends_on:
+      - softserve
+  # firefox:
+  #   image: lscr.io/linuxserver/firefox@sha256:2bf06b5b3d35ccb64279fbd5a29f1df8b30ae780f08c621df1789ba1568398d1
+  #   restart: unless-stopped
+  #   environment:
+  #     - PUID=1000
+  #     - PGID=1000
+  #     - TZ=America/Indiana/Indianapolis
+  #   ports:
+  #    - 3000:3000
+  #   shm_size: "1gb"
