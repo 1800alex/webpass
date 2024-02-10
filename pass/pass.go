@@ -1,6 +1,7 @@
 package pass
 
 import (
+	"context"
 	"errors"
 	"io"
 )
@@ -8,6 +9,10 @@ import (
 var ErrNotFound = errors.New("pass: not found")
 
 type Store interface {
+	Init(ctx context.Context) error
+	Sync() error
+	Path() string
+	Exists(item string) bool
 	List() ([]string, error)
 	Open(name string) (io.ReadCloser, error)
 	Create(name string) (io.WriteCloser, error)

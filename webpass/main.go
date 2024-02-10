@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"os"
 
@@ -23,6 +24,16 @@ func main() {
 		addr = ":" + port
 	}
 
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	// Catch SIGIN and SIGTERM to gracefully shutdown
+	go func() {
+		sig := make(chan os.Signal, 1)
+		<-sig
+		cancel()
+	}()
+
 	cfg, err := config.Open(*configPath)
 	if os.IsNotExist(err) {
 		cfg = config.New()
@@ -30,7 +41,7 @@ func main() {
 		e.Logger.Fatal(err)
 	}
 
-	be, err := cfg.Backend()
+	be, err := cfg.Backend(ctx)
 	if err != nil {
 		e.Logger.Fatal(err)
 	}
@@ -39,4 +50,5 @@ func main() {
 	s.Addr = addr
 
 	e.Logger.Fatal(s.Start(e))
+	<-ctx.Done()
 }

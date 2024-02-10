@@ -1,6 +1,7 @@
 package config
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -20,16 +21,13 @@ var auths = make(map[string]AuthCreateFunc)
 type backend struct {
 	config *Config
 	auth   AuthFunc
+	store  pass.Store
 }
 
 func (be *backend) Auth(username, password string) (webpass.User, error) {
 	s, err := be.auth(username, password)
 	if err != nil {
 		return nil, err
-	}
-
-	if s == nil {
-		s = pass.NewDefaultStore()
 	}
 
 	u, ok := s.(webpass.User)
@@ -40,7 +38,7 @@ func (be *backend) Auth(username, password string) (webpass.User, error) {
 		}
 
 		u = &user{
-			Store:     s,
+			Store:     be.store,
 			pgpConfig: pgpConfig,
 		}
 	}
@@ -106,7 +104,7 @@ func Open(path string) (*Config, error) {
 	return cfg, err
 }
 
-func (cfg *Config) Backend() (webpass.Backend, error) {
+func (cfg *Config) Backend(ctx context.Context) (webpass.Backend, error) {
 	be := &backend{config: cfg}
 
 	createAuth, ok := auths[cfg.AuthType]
@@ -118,6 +116,13 @@ func (cfg *Config) Backend() (webpass.Backend, error) {
 		return nil, err
 	}
 	be.auth = auth
+
+	be.store = pass.NewDefaultStore()
+
+	err = be.store.Init(ctx)
+	if err != nil {
+		return nil, err
+	}
 
 	return be, nil
 }
