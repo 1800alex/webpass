@@ -6,8 +6,8 @@ import (
 	"io"
 	"os"
 
-	"github.com/emersion/webpass"
-	"github.com/emersion/webpass/pass"
+	"github.com/1800alex/webpass"
+	"github.com/1800alex/webpass/pass"
 )
 
 type (
@@ -19,7 +19,7 @@ var auths = make(map[string]AuthCreateFunc)
 
 type backend struct {
 	config *Config
-	auth AuthFunc
+	auth   AuthFunc
 }
 
 func (be *backend) Auth(username, password string) (webpass.User, error) {
@@ -40,7 +40,7 @@ func (be *backend) Auth(username, password string) (webpass.User, error) {
 		}
 
 		u = &user{
-			Store: s,
+			Store:     s,
 			pgpConfig: pgpConfig,
 		}
 	}
@@ -69,13 +69,13 @@ type authConfig struct {
 }
 
 type Config struct {
-	AuthType string `json:"-"`
-	PGP *PGPConfig `json:"pgp"`
+	AuthType string     `json:"-"`
+	PGP      *PGPConfig `json:"pgp"`
 
 	Auth json.RawMessage `json:"auth,omitempty"`
 }
 
-type PGPConfig struct{
+type PGPConfig struct {
 	PrivateKey string `json:"privatekey,omitempty"`
 }
 

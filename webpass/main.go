@@ -4,8 +4,8 @@ import (
 	"flag"
 	"os"
 
-	"github.com/emersion/webpass"
-	"github.com/emersion/webpass/config"
+	"github.com/1800alex/webpass"
+	"github.com/1800alex/webpass/config"
 	"github.com/labstack/echo"
 	"github.com/labstack/gommon/log"
 )

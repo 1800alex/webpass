@@ -16,6 +16,8 @@ RUN set -xe \
 	yq \
 	# make
 	make \
+	# cgo libraries
+	build-base linux-pam-dev \
 	# Clean up
 	&& rm -rf /var/cache/apk/*
 
@@ -23,7 +25,8 @@ RUN set -xe \
 # Add test user with UID 1000 GID 1000
 RUN adduser -D -u 1000 -g 1000 test \
 	&& mkdir -p /home/test \
-	&& chown -R test:test /home/test
+	&& chown -R test:test /home/test && \
+	printf "test\ntest\n" | passwd test
 
 COPY entrypoint.sh /
 RUN chmod u+x /entrypoint.sh

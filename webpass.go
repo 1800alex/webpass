@@ -5,8 +5,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"path/filepath"
+	"strings"
 
-	"github.com/emersion/webpass/pass"
+	"github.com/1800alex/webpass/pass"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 )
@@ -111,14 +113,14 @@ func (s *Server) Start(e *echo.Echo) error {
 	authAPI := api.Group("")
 
 	authAPI.Use(middleware.KeyAuthWithConfig(middleware.KeyAuthConfig{
-		Validator: func(key string, c echo.Context) bool {
+		Validator: func(key string, c echo.Context) (bool, error) {
 			u, ok := s.sessions[key]
 			if !ok {
-				return false
+				return false, nil
 			}
 
 			c.Set("user", u)
-			return true
+			return true, nil
 		},
 	}))
 
@@ -130,6 +132,11 @@ func (s *Server) Start(e *echo.Echo) error {
 		return c.JSON(http.StatusOK, list)
 	})
 	authAPI.GET("/store/*.gpg", func(c echo.Context) error {
+		filename := strings.TrimPrefix(c.Param("*"), "/store/")
+
+		filepath := filepath.Join("/home/test/.password-store", filename)
+
+		fmt.Println(filepath)
 		r, err := userFrom(c).Open(c.Param("*"))
 		if err == pass.ErrNotFound {
 			return echo.NewHTTPError(http.StatusNotFound)
@@ -141,6 +148,7 @@ func (s *Server) Start(e *echo.Echo) error {
 		return c.Stream(http.StatusOK, "application/pgp-encrypted", r)
 	})
 	authAPI.GET("/keys.gpg", func(c echo.Context) error {
+		fmt.Println("/keys.gpg")
 		r, err := userFrom(c).OpenPGPKey()
 		if err == ErrNoSuchKey {
 			return echo.NewHTTPError(http.StatusNotFound)

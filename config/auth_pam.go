@@ -8,8 +8,8 @@ import (
 	"errors"
 	osuser "os/user"
 
-	"github.com/emersion/webpass"
-	"github.com/emersion/webpass/pass"
+	"github.com/1800alex/webpass"
+	"github.com/1800alex/webpass/pass"
 	"github.com/msteinert/pam"
 )
 

@@ -4,7 +4,7 @@ import (
 	"errors"
 	"io"
 
-	"github.com/emersion/webpass/pass"
+	"github.com/1800alex/webpass/pass"
 )
 
 var (

@@ -20,13 +20,13 @@ services:
       - config.env
     depends_on:
       - softserve
-  # firefox:
-  #   image: lscr.io/linuxserver/firefox@sha256:2bf06b5b3d35ccb64279fbd5a29f1df8b30ae780f08c621df1789ba1568398d1
-  #   restart: unless-stopped
-  #   environment:
-  #     - PUID=1000
-  #     - PGID=1000
-  #     - TZ=America/Indiana/Indianapolis
-  #   ports:
-  #    - 3000:3000
-  #   shm_size: "1gb"
+  firefox:
+    image: lscr.io/linuxserver/firefox@sha256:2bf06b5b3d35ccb64279fbd5a29f1df8b30ae780f08c621df1789ba1568398d1
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Indiana/Indianapolis
+    ports:
+     - 3000:3000
+    shm_size: "1gb"

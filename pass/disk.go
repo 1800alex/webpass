@@ -19,6 +19,8 @@ func NewDefaultStore() Store {
 	return NewStore(defaultStorePath())
 }
 
+//  git clone git@softserve:icecream1.git /home/test/.password-store
+
 func defaultStorePath() string {
 	if path := os.Getenv("PASSWORD_STORE_DIR"); path != "" {
 		return path

@@ -7,14 +7,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/emersion/webpass.git"
+    "url": "git+https://github.com/1800alex/webpass.git"
   },
   "author": "emersion (http://emersion.fr)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/emersion/webpass/issues"
+    "url": "https://github.com/1800alex/webpass/issues"
   },
-  "homepage": "https://github.com/emersion/webpass#readme",
+  "homepage": "https://github.com/1800alex/webpass#readme",
   "dependencies": {
     "openpgp": "^2.3.5",
     "vue": "^2.1.10",

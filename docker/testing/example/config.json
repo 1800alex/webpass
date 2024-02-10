@@ -1,0 +1,8 @@
+{
+	"auth": {
+		"type": "pam"
+	},
+	"pgp": {
+		"privatekey": "docker/testing/example/private-key.gpg"
+	}
+}

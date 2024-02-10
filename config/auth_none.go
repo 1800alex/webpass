@@ -3,7 +3,7 @@ package config
 import (
 	"encoding/json"
 
-	"github.com/emersion/webpass/pass"
+	"github.com/1800alex/webpass/pass"
 )
 
 func init() {
