@@ -112,6 +112,16 @@ rm /tmp/testfile
 rm /tmp/testfile.asc
 echo "Key can encrypt and decrypt."
 
+# Set gpg-agent to have a short cache time and reload it
+cat > ${HOME}/.gnupg/gpg-agent.conf <<EOF
+default-cache-ttl 1
+max-cache-ttl 1
+EOF
+chmod 600 ${HOME}/.gnupg/gpg-agent.conf
+
+# Reload gpg-agent to apply the changes
+gpgconf --reload all
+
 set +e
 
 ## Setup softserve
