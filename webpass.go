@@ -131,6 +131,40 @@ func (s *Server) Start(e *echo.Echo) error {
 		}
 		return c.JSON(http.StatusOK, list)
 	})
+	authAPI.POST("/store/*.gpg", func(c echo.Context) error {
+		// get the filename from the URL
+		filename := strings.TrimPrefix(c.Param("*"), "/store/")
+		fmt.Println("filename", filename)
+
+		// parse body json into map[string]interface{}
+		var body map[string]interface{}
+		if err := json.NewDecoder(c.Request().Body).Decode(&body); err != nil {
+			return err
+		}
+
+		// get the content from the map
+		passphrase := body["passphrase"].(string)
+
+		fmt.Println("passphrase", passphrase)
+
+		// open the file
+		r, err := userFrom(c).Decrypt(filename, passphrase)
+		if err != nil {
+			fmt.Println("err", err)
+		}
+
+		if err == pass.ErrNotFound {
+			return echo.NewHTTPError(http.StatusNotFound)
+		} else if err != nil {
+			return err
+		}
+
+		fmt.Println("r", r)
+
+		// return the content as plaintext
+		return c.String(http.StatusOK, r)
+
+	})
 	authAPI.GET("/store/*.gpg", func(c echo.Context) error {
 		filename := strings.TrimPrefix(c.Param("*"), "/store/")
 

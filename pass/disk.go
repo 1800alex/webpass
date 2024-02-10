@@ -136,6 +136,28 @@ func (s *DiskStore) Open(item string) (io.ReadCloser, error) {
 	return f, err
 }
 
+func (s *DiskStore) Decrypt(item string, passphrase string) (string, error) {
+	p, err := s.itemPath(item)
+	if err != nil {
+		return "", err
+	}
+
+	_, err = os.Stat(p)
+	if err != nil {
+		return "", err
+	}
+
+	result := exec.WithStdin(fmt.Sprintf("gpg --pinentry-mode loopback --passphrase-fd 0 -d \"%q\"", p), passphrase)
+	if result.Err != nil {
+		fmt.Println("result.Err", result.Err)
+		fmt.Println("result.Stdout", result.Stdout)
+		fmt.Println("result.Stderr", result.Stderr)
+		return "", result.Err
+	}
+
+	return result.Stdout, nil
+}
+
 func (s *DiskStore) Create(item string) (io.WriteCloser, error) {
 	p, err := s.itemPath(item)
 	if err != nil {

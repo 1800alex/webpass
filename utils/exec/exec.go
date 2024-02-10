@@ -29,6 +29,11 @@ func WithStdin(command string, stdin string) Result {
 		return Result{Err: fmt.Errorf("error creating stderr pipe: %v", err)}
 	}
 
+	stdinWriter, err := cmd.StdinPipe()
+	if err != nil {
+		return Result{Err: fmt.Errorf("error getting stdin pipe: %v", err)}
+	}
+
 	// Start the command
 	if err := cmd.Start(); err != nil {
 		return Result{Err: fmt.Errorf("error starting command: %v", err)}
@@ -36,16 +41,12 @@ func WithStdin(command string, stdin string) Result {
 
 	// Write stdin to the command's stdin
 	if stdin != "" {
-		stdinWriter, err := cmd.StdinPipe()
-		if err != nil {
-			return Result{Err: fmt.Errorf("error getting stdin pipe: %v", err)}
-		}
 		_, err = io.WriteString(stdinWriter, stdin)
 		if err != nil {
 			return Result{Err: fmt.Errorf("error writing to stdin: %v", err)}
 		}
-		stdinWriter.Close()
 	}
+	stdinWriter.Close()
 
 	// Capture stdout and stderr separately
 	var stdoutBuf, stderrBuf bytes.Buffer

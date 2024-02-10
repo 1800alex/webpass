@@ -15,5 +15,6 @@ type Store interface {
 	Exists(item string) bool
 	List() ([]string, error)
 	Open(name string) (io.ReadCloser, error)
+	Decrypt(item string, passphrase string) (string, error)
 	Create(name string) (io.WriteCloser, error)
 }
