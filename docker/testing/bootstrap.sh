@@ -24,6 +24,12 @@ SSH_PRIVATEKEY=$(cat ./multi/keys/ssh_host_rsa_key)
 SSH_KEY=$(cat ./multi/keys/ssh_host_rsa_key.pub)
 SSH_KEY_NAME=test
 
+cp multi/config.env.example multi/config.env
+sed -i \
+    -e "s#SSH_KEY=.*#SSH_KEY=${SSH_KEY}#g" \
+    -e "s#SSH_KEY_NAME=.*#SSH_KEY_NAME=${SSH_KEY_NAME}#g" \
+    multi/config.env
+
 mkdir -p multi/soft-serve/
 cp multi/soft-serve.yml.example multi/soft-serve/config.yaml
 sed -i \
